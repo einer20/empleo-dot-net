@@ -11,7 +11,7 @@ namespace EmpleoDotNet.Models
     public class EmpleadoContext : DbContext
     {
         public EmpleadoContext()
-            : base(Empleos2Net.ConnectionString.ToString() ?? "EmpleoDotNetConn")
+            : base(Empleos2Net.ConnectionString == null ? Empleos2Net.ConnectionString.ToString() : "EmpleoDotNetConn")
         {
             this.Configuration.LazyLoadingEnabled = true;
         }
