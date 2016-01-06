@@ -48,23 +48,31 @@ namespace EmpleoDotNet.Controllers
             return View(viewModel);
         }
 
-        // GET: /JobOpportunity/Detail/4
+        [HttpGet]
         public ActionResult Detail(int? id)
         {
             if (!id.HasValue)
                 return RedirectToAction("Index");
 
-            var vm = _jobRepository.GetJobOpportunityById(id);
-
-            if (vm != null)
+            // Con esto evitaria hacer instancias en el constructor
+            // de repositorios que quizas no necesitamos en el action
+            using (var jobService = Empleos2Net.GetJobsService())
             {
-                var relatedJobs =
-                    _jobRepository.GetAllJobOpportunities()
-                        .Where(
+                var job = jobService.GetJobById(id.Value);
+
+                if (job == null)
+                {
+                    ViewBag.ErrorMessage = "La vacante solicitada no existe. Por favor escoger una vacante válida del listado";
+
+                    return View("Index");
+                }
+
+                var relatedJobs = jobService.GetAllJobs()
+                     .Where(
                             x =>
-                                x.Id != vm.Id &&
-                                (x.CompanyName == vm.CompanyName && x.CompanyEmail == vm.CompanyEmail &&
-                                 x.CompanyUrl == vm.CompanyUrl)).Select(jobOpportunity => new RelatedJobDto()
+                                x.Id != job.Id &&
+                                (x.CompanyName == job.CompanyName && x.CompanyEmail == job.CompanyEmail &&
+                                 x.CompanyUrl == job.CompanyUrl)).Select(jobOpportunity => new RelatedJobDto()
                                  {
                                      Title = jobOpportunity.Title,
                                      Url = "/JobOpportunity/Detail/" + jobOpportunity.Id
@@ -72,14 +80,9 @@ namespace EmpleoDotNet.Controllers
 
                 ViewBag.RelatedJobs = relatedJobs;
 
-                return View("Detail", vm);
+                return View("Detail", job);
             }
-                
-            
-            ViewBag.ErrorMessage = 
-                "La vacante solicitada no existe. Por favor escoger una vacante válida del listado";
-            
-            return View("Index");
+
         }
 
         // GET: /JobOpportunity/New
