@@ -1982,3 +1982,54 @@ header {
 		}
 
 	}
+
+    /* QUICK SEARCH COMPONENT */
+#quick-search-result {
+position: absolute;
+background: #fff;
+max-height: 500px;
+width: 205px;
+overflow: auto;
+color: #333;
+text-transform: uppercase;
+border: solid 1px #A9ADAD;
+border-top: none;
+box-shadow: 2px 2px 7px #919191;
+border-radius: 0px;
+margin-top: -1px;
+display:none;
+}
+
+#quick-search-result ul {
+list-style: none;
+}
+#quick-search-result .expand {
+font-size: 12px;
+}
+#quick-search-result a {
+color: #4F4FE4;
+font-size: 11px;
+}
+        
+#quick-search-result ul li {
+margin-left: -31px;
+line-height: 22px;
+}
+#quick-search-result ul li .name {
+font-size: 13px;
+font-weight: bold;
+padding: 5px;
+}
+
+#quick-search-result ul li .description {
+color: #747474;
+font-size: 10px;
+display: inline-block;
+padding: 5px;
+}
+#quick-search-result ul li .category {
+
+}
+#quick-search-result ul li .expand {
+cursor:pointer;
+}
