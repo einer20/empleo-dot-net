@@ -11,6 +11,22 @@
     @Styles.Render("~/bundles/theme/css")
     <link href="http://fonts.googleapis.com/css?family=Lato:400,700|Montserrat:700" rel="stylesheet"/>
     @RenderSection("styles", required: false)
+    
+    <script>
+        var BASE_URL = "@Url.Content("~/")";
+        function href(url, parameter)
+        {
+            if (url)
+            {
+                url = url.replace("~/", BASE_URL);
+                if (parameter) {
+                    url += "?" + $.param(parameter);
+                }
+
+                return url;
+            }
+        }
+    </script>
 </head>
 <body id="home">
     <!-- ============ NAVBAR START ============ -->
@@ -38,8 +54,19 @@
             <div class="pull-left">
                 <div><a href="@Url.Action("Index", "Home")"><i class="fa fa-users fa-2x"></i> Emplea.do</a></div>
             </div>
+           
             <div id="menu-open" class="pull-right">
                 <a class="fm-button"><i class="fa fa-bars fa-lg"></i></a>
+            </div>
+            <div class="pull-right">
+                <form>
+                    <input type="text"  class="form-control" name="quicksearch" value="" id="quick-search" />
+                </form>
+                <div id="quick-search-result">
+                    <ul>
+
+                    </ul>
+                </div>
             </div>
             @*<div id="searchbox" class="pull-right">
                 <form>
