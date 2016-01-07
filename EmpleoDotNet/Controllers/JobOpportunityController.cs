@@ -138,6 +138,7 @@ namespace EmpleoDotNet.Controllers
             using (var jobsService = Models.Empleos2Net.GetJobsService())
             {
                 var jobs = jobsService.GetAllJobs()
+                    .Take(10)
                             .Where(X => X.Title.ToUpper().Contains(hint) || X.Description.ToUpper().Contains(hint))
                                 .ToList();
 
