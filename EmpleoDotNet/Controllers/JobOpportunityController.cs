@@ -22,6 +22,7 @@ namespace EmpleoDotNet.Controllers
         }
         
         // GET: /JobOpportunity/
+        [HttpGet]
         public ActionResult Index(int selectedLocation = 0, int page = 1, int pageSize = 15)
         {
             var locations = _locationRepository.GetAllLocations();
@@ -117,6 +118,43 @@ namespace EmpleoDotNet.Controllers
             var latestJobOpportunities = _jobRepository.GetLatestJobOpporunity(10);
 
             return PartialView("_LastestJobs", latestJobOpportunities);
+        }
+
+        /// <summary>
+        /// Performs a quick search of all jobs available
+        /// </summary>
+        /// <param name="hint"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult QuickJobSearch(string hint)
+        {
+
+            if (String.IsNullOrEmpty(hint))
+            {
+                return Json(null, JsonRequestBehavior.AllowGet);
+            }
+
+            hint = hint.ToUpper();
+            using (var jobsService = Models.Empleos2Net.GetJobsService())
+            {
+                var jobs = jobsService.GetAllJobs()
+                            .Where(X => X.Title.ToUpper().Contains(hint) || X.Description.ToUpper().Contains(hint))
+                                .ToList();
+
+                var result = jobs.Select(x => new
+                {
+                    id = x.Id,
+                    name = x.Title,
+                    companyUrl = x.CompanyUrl,
+                    description = x.Description,
+                    logo = x.CompanyLogoUrl,
+                    categoryInt = (int)x.Category,
+                    categoryString = x.Category.ToString()
+                }).GroupBy(x => x.categoryString);
+
+
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
         }
 
         private void LoadLocations(NewJobOpportunityViewModel viewModel)
